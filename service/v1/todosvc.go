@@ -37,7 +37,6 @@ func (todo *todoService) NewTodo(ctx context.Context, req *v1.TodoRequest) (*v1.
 
 func (todo *todoService) ListTodo(ctx context.Context, req *v1.ListTodoRequest) (*v1.ListTodoResponse, error) {
 	criteria := model.NewCriteria()
-	var bind []interface{}
 	if req.StartTime != nil {
 		criteria.ANDBind = append(criteria.ANDBind, req.StartTime.Seconds)
 		criteria.ANDCondition = append(criteria.ANDCondition, "created_at > ?")
@@ -48,7 +47,7 @@ func (todo *todoService) ListTodo(ctx context.Context, req *v1.ListTodoRequest) 
 	}
 
 	if len(req.Title) > 0 {
-		bind = append(bind, "%"+req.Title+"%")
+		criteria.ANDBind = append(criteria.ANDBind, "%"+req.Title+"%")
 		criteria.ANDCondition = append(criteria.ANDCondition, "title like ?")
 	}
 
