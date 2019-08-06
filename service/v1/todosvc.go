@@ -38,7 +38,7 @@ func (todo *todoService) ListTodo(ctx context.Context, req *v1.ListTodoRequest) 
 	return nil, nil
 }
 
-func (todo *todoService) UpdateTodo(ctx context.Context, req *v1.UpdatedTodoRequest) (*v1.UpdatedTodoRequest, error) {
+func (todo *todoService) UpdateTodo(ctx context.Context, req *v1.UpdatedTodoRequest) (*v1.UpdatedTodoResponse, error) {
 	return nil, nil
 }
 
