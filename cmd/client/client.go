@@ -20,6 +20,13 @@ func main() {
 	todoClient := v1.NewTodoServiceClient(clientConn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 	defer cancel()
+	// NewTodo(ctx, todoClient)
+
+	GetTodoList(ctx, todoClient)
+
+}
+
+func NewTodo(ctx context.Context, todoClient v1.TodoServiceClient) {
 
 	todoReq := &v1.TodoRequest{
 		Title:       "hello todo client",
@@ -31,4 +38,16 @@ func main() {
 		log.Fatalf("create todo list failure: %v\n", err)
 	}
 	log.Printf("create todo list success: %v\n", resp)
+
+}
+
+func GetTodoList(ctx context.Context, client v1.TodoServiceClient) {
+
+	todoListReq := &v1.ListTodoRequest{
+	}
+	resp, err := client.ListTodo(ctx, todoListReq)
+	if err != nil {
+		log.Fatalf("query todo list failure: %v\n", err)
+	}
+	log.Printf("query todo list success: %v\n", resp)
 }

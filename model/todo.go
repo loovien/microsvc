@@ -22,9 +22,9 @@ func (todo *Todo) CreatedTodo() (int64, error) {
 	return todo.Id, err
 }
 
-func (todo *Todo) GetTodoList(criteria Criteria, bind []interface{}) ([]*Todo, error) {
-	var resp []*Todo
+func (todo *Todo) GetTodoList(criteria *Criteria) ([]Todo, error) {
+	var resp []Todo
 	session := criteria.Apply(x)
-	err := session.Find(resp)
+	err := session.Find(&resp)
 	return resp, err
 }
