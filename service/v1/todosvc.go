@@ -35,7 +35,24 @@ func (todo *todoService) NewTodo(ctx context.Context, req *v1.TodoRequest) (*v1.
 }
 
 func (todo *todoService) ListTodo(ctx context.Context, req *v1.ListTodoRequest) (*v1.ListTodoResponse, error) {
-	return nil, nil
+	criteria := model.NewCriteria()
+	var bind []interface{}
+	if req.StartTime.Seconds > 0 {
+		bind = append(bind, req.StartTime.Seconds)
+		criteria.ANDCondition = append(criteria.ANDCondition, "created_at > ?")
+	}
+	if req.EndTime.Seconds > 0 {
+		bind = append(bind, req.EndTime.Seconds)
+		criteria.ANDCondition = append(criteria.ANDCondition, "created_at <= ?")
+	}
+
+	if len(req.Title) > 0 {
+		bind = append(bind, "%"+req.Title+"%")
+		criteria.ANDCondition = append(criteria.ANDCondition, "title like ?")
+	}
+
+	mtodo := &model.Todo{}
+	todoList, err := mtodo.GetTodoList(criteria, bind)
 }
 
 func (todo *todoService) UpdateTodo(ctx context.Context, req *v1.UpdatedTodoRequest) (*v1.UpdatedTodoResponse, error) {

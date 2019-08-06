@@ -2,27 +2,18 @@ package main
 
 import (
 	"context"
-	"github.com/labstack/gommon/log"
-	appGRPC "github.com/loovien/microsvc/grpc"
+	GRPC "github.com/loovien/microsvc/grpc"
 	"github.com/loovien/microsvc/service/v1"
-	"os"
-	"os/signal"
+	"log"
 )
 
 func main() {
+	addr := "localhost:8000"
 	ctx := context.Background()
 	todoSvr := v1.NewTodoService()
-	go func() {
-		err := appGRPC.ServerRUN(ctx, todoSvr, "localhost:8000")
-		if err != nil {
-			panic(err)
-		}
-	}()
-
-	sigChan := make(chan os.Signal)
-	signal.Notify(sigChan, os.Interrupt, os.Kill)
-
-	sig := <-sigChan
-	<-ctx.Done()
-	log.Printf("receive signal: %v\n", sig)
+	err := GRPC.ServerRUN(ctx, todoSvr, addr)
+	if err != nil {
+		log.Printf("grpc start failure: %v\n", err)
+	}
+	log.Printf("grpc sever stop: %v\n", err)
 }

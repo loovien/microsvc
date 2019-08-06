@@ -1,11 +1,11 @@
 package model
 
 type Todo struct {
-	Id          int
+	Id          int64
 	Title       string
 	Description string
 	Reminder    int64
-	CreatedAt   int64 `xorm:"column(created_at)"`
+	CreatedAt   int64
 	IsDeleted   bool
 }
 
@@ -18,5 +18,13 @@ func (todo *Todo) TableName() string {
 }
 
 func (todo *Todo) CreatedTodo() (int64, error) {
-	return x.InsertOne(todo)
+	_, err := x.Insert(todo)
+	return todo.Id, err
+}
+
+func (todo *Todo) GetTodoList(criteria Criteria, bind []interface{}) ([]*Todo, error) {
+	var resp []*Todo
+	session := criteria.Apply(x)
+	err := session.Find(resp)
+	return resp, err
 }
